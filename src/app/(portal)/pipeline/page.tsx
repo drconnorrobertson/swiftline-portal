@@ -60,9 +60,9 @@ export default function PipelinePage() {
         <span className="text-xs text-gray-400 ml-auto">{totalDeals} total deals</span>
       </div>
 
-      <div className="grid grid-cols-4 gap-4" style={{ gridTemplateColumns: `repeat(${pipelineStages.length + 1}, minmax(220px, 1fr))` }}>
+      <div className="flex lg:grid gap-4 overflow-x-auto pb-4 snap-x snap-mandatory" style={{ gridTemplateColumns: `repeat(${pipelineStages.length + 1}, minmax(220px, 1fr))` }}>
         {dealsByStage.map((stage) => (
-          <div key={stage.name} className="bg-white rounded-xl border border-gray-200 min-h-[300px]">
+          <div key={stage.name} className="bg-white rounded-xl border border-gray-200 min-h-[300px] min-w-[260px] snap-start flex-shrink-0 lg:flex-shrink lg:min-w-0">
             <div className="p-3 border-b border-gray-100">
               <div className="flex items-center gap-2">
                 <div className="w-1.5 h-6 rounded-full" style={{ backgroundColor: stage.color === '#FEF3C7' ? '#F59E0B' : stage.color === '#DBEAFE' ? '#3B82F6' : stage.color === '#D1FAE5' ? '#10B981' : '#8B5CF6' }} />
@@ -98,7 +98,7 @@ export default function PipelinePage() {
             </div>
           </div>
         ))}
-        <div className="border-2 border-dashed border-gray-200 rounded-xl flex items-center justify-center min-h-[300px] cursor-pointer hover:border-amber-400 transition-colors">
+        <div className="border-2 border-dashed border-gray-200 rounded-xl flex items-center justify-center min-h-[300px] min-w-[260px] snap-start flex-shrink-0 lg:flex-shrink lg:min-w-0 cursor-pointer hover:border-amber-400 transition-colors">
           <div className="text-center">
             <Plus className="w-6 h-6 text-gray-300 mx-auto mb-1" />
             <p className="text-sm text-gray-400">Add Stage</p>

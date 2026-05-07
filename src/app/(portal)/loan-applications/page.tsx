@@ -40,29 +40,61 @@ export default function LoanApplicationsPage() {
       </div>
 
       <div className="bg-white rounded-xl border border-gray-200">
-        <div className="p-4 border-b border-gray-100 flex items-center justify-between">
-          <div className="flex items-center gap-2 bg-gray-50 rounded-lg px-3 py-2 w-80">
-            <Search className="w-4 h-4 text-gray-400" />
+        <div className="p-3 sm:p-4 border-b border-gray-100 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2 bg-gray-50 rounded-lg px-3 py-2 w-full sm:w-80">
+            <Search className="w-4 h-4 text-gray-400 flex-shrink-0" />
             <input
               type="text"
               placeholder="Search by name or loan ID..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="bg-transparent text-sm outline-none w-full"
+              className="bg-transparent text-sm outline-none w-full min-w-0"
             />
           </div>
-          <div className="flex gap-1">
+          <div className="flex gap-1 overflow-x-auto pb-1 sm:pb-0">
             {['All', 'New', 'Processing', 'Funded', 'Rejected', 'Dead'].map(status => (
               <button
                 key={status}
                 onClick={() => setStatusFilter(status)}
-                className={`px-3 py-1 text-xs rounded-lg ${statusFilter === status ? 'bg-amber-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                className={`px-3 py-1 text-xs rounded-lg whitespace-nowrap ${statusFilter === status ? 'bg-amber-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
               >
                 {status}
               </button>
             ))}
           </div>
         </div>
+
+        {/* Mobile card view */}
+        <div className="sm:hidden p-3 space-y-3">
+          {filtered.map(loan => (
+            <Link key={loan.id} href={`/loan-applications/${loan.id}`} className="block bg-gray-50 rounded-lg p-3 border border-gray-100">
+              <div className="flex items-start justify-between mb-1">
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-gray-900">{loan.borrower}</p>
+                  <p className="text-[10px] text-gray-400 font-mono">{loan.id}</p>
+                </div>
+                <span className={`text-[10px] px-2 py-0.5 rounded-full flex-shrink-0 ${statusColors[loan.status]}`}>{loan.status}</span>
+              </div>
+              <p className="text-xs text-gray-500 truncate mb-2">{loan.address}</p>
+              <div className="flex items-center justify-between">
+                <div className="flex gap-2">
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-700">{loan.type}</span>
+                  <span className={`text-[10px] px-2 py-0.5 rounded-full ${loan.scottLender ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-50 text-gray-400'}`}>
+                    Scott: {loan.scottLender ? 'Yes' : 'No'}
+                  </span>
+                </div>
+                <span className="text-sm font-semibold text-gray-900">{formatCurrency(loan.amount)}</span>
+              </div>
+              <div className="mt-2 pt-2 border-t border-gray-200 flex items-center justify-between">
+                <code className="text-[10px] bg-gray-100 px-1.5 py-0.5 rounded font-mono">{loan.accessCode}</code>
+                <span className="text-[10px] text-gray-400">{loan.affiliate}</span>
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        {/* Desktop table */}
+        <div className="hidden sm:block overflow-x-auto">
         <table className="w-full">
           <thead>
             <tr className="text-left text-xs text-gray-500 uppercase tracking-wider border-b border-gray-100">
@@ -116,6 +148,7 @@ export default function LoanApplicationsPage() {
             ))}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   );

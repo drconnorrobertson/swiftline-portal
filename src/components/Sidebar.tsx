@@ -4,8 +4,9 @@ import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard, Users, Kanban, FileText, PlusCircle, ShieldCheck,
   FolderOpen, UserPlus, UsersRound, Megaphone, Palette, Wrench,
-  MessageSquare, Building2, Search, Settings, Zap
+  MessageSquare, Building2, Search, Settings, Zap, Menu, X
 } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -30,43 +31,72 @@ const navItems = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+
+  // Close sidebar on route change (mobile)
+  useEffect(() => { setOpen(false); }, [pathname]);
 
   return (
-    <aside className="w-[200px] min-h-screen bg-white border-r border-gray-200 flex flex-col fixed left-0 top-0 z-40">
-      <div className="p-4 border-b border-gray-100">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-lg flex items-center justify-center">
-            <Zap className="w-5 h-5 text-white" />
+    <>
+      {/* Mobile hamburger */}
+      <button
+        onClick={() => setOpen(true)}
+        className="lg:hidden fixed top-3 left-3 z-50 p-2 bg-white rounded-lg shadow-md border border-gray-200"
+        aria-label="Open menu"
+      >
+        <Menu className="w-5 h-5 text-gray-700" />
+      </button>
+
+      {/* Overlay */}
+      {open && (
+        <div className="lg:hidden fixed inset-0 bg-black/40 z-40" onClick={() => setOpen(false)} />
+      )}
+
+      {/* Sidebar */}
+      <aside className={`
+        w-[220px] min-h-screen bg-white border-r border-gray-200 flex flex-col fixed left-0 top-0 z-50
+        transition-transform duration-200
+        ${open ? 'translate-x-0' : '-translate-x-full'}
+        lg:translate-x-0
+      `}>
+        <div className="p-4 border-b border-gray-100 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-lg flex items-center justify-center">
+              <Zap className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h1 className="text-sm font-bold text-gray-900 leading-tight">Swift Line</h1>
+              <p className="text-[10px] text-gray-500 leading-tight tracking-wider uppercase">Capital</p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-sm font-bold text-gray-900 leading-tight">Swift Line</h1>
-            <p className="text-[10px] text-gray-500 leading-tight tracking-wider uppercase">Capital</p>
-          </div>
+          <button onClick={() => setOpen(false)} className="lg:hidden p-1 hover:bg-gray-100 rounded">
+            <X className="w-4 h-4 text-gray-500" />
+          </button>
         </div>
-      </div>
-      <nav className="flex-1 py-2 overflow-y-auto">
-        {navItems.map((item, i) => {
-          if ('divider' in item) {
-            return <div key={i} className="my-2 border-t border-gray-100" />;
-          }
-          const Icon = item.icon!;
-          const active = pathname === item.href || pathname?.startsWith(item.href + '/');
-          return (
-            <Link
-              key={item.href}
-              href={item.href!}
-              className={`flex items-center gap-2.5 px-4 py-2 text-[13px] transition-all ${
-                active
-                  ? 'bg-amber-50 text-amber-700 font-medium border-r-2 border-amber-500'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-              }`}
-            >
-              <Icon className="w-4 h-4 flex-shrink-0" />
-              <span>{item.label}</span>
-            </Link>
-          );
-        })}
-      </nav>
-    </aside>
+        <nav className="flex-1 py-2 overflow-y-auto">
+          {navItems.map((item, i) => {
+            if ('divider' in item) {
+              return <div key={i} className="my-2 border-t border-gray-100" />;
+            }
+            const Icon = item.icon!;
+            const active = pathname === item.href || pathname?.startsWith(item.href + '/');
+            return (
+              <Link
+                key={item.href}
+                href={item.href!}
+                className={`flex items-center gap-2.5 px-4 py-2.5 text-[13px] transition-all ${
+                  active
+                    ? 'bg-amber-50 text-amber-700 font-medium border-r-2 border-amber-500'
+                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                }`}
+              >
+                <Icon className="w-4 h-4 flex-shrink-0" />
+                <span>{item.label}</span>
+              </Link>
+            );
+          })}
+        </nav>
+      </aside>
+    </>
   );
 }
