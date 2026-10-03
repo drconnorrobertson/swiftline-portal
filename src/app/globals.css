@@ -36,3 +36,6 @@ p, blockquote { text-wrap: pretty; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0ms !important; transition-duration: .01ms !important; } }
 
 button, input, select, textarea { font-family: inherit; } input, select, textarea { transition: border-color .2s ease, box-shadow .2s ease; } table { font-variant-numeric: tabular-nums; }
+
+/* Honor reduced-motion preferences without repeating shortened animations. */
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-iteration-count: 1 !important; } }
