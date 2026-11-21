@@ -4,6 +4,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Swift Line Capital",
   description: "Loan origination and deal management portal",
+  robots: { index: false, follow: false },
 };
 
 export default function RootLayout({
